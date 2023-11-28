@@ -1,28 +1,44 @@
 from django.shortcuts import render, redirect
-from .models import Pessoa
+from .models import Pessoa, Anuncio
+from django.http import HttpResponse
+from django.core.serializers import serialize
+import json
 
-def home(request):
-    pessoas = Pessoa.objects.all()
-    return render(request, "index.html", {"pessoas": pessoas})
+
+def recuperar_anuncios(request):
+    pessoas = Anuncio.objects.all()
+    pessoas = serialize('json', pessoas)
+    return HttpResponse(pessoas, content_type="application/json")
+
+
 
 def salvar(request):
-    vnome = request.POST.get("nome")
-    Pessoa.objects.create(nome=vnome)
-    pessoas = Pessoa.objects.all()
-    return render(request, "index.html", {"pessoas": pessoas})
+    titulo= request.POST.get("titulo")
+    qtd_quartos = request.POST.get("qtd_quartos")
+    qtd_banheiro = request.POST.get("qtd_banheiro")
+    valor = request.POST.get("valor")
+    Anuncio.objects.create(titulo=titulo, qtd_quartos=qtd_quartos, qtd_banheiro=qtd_banheiro, valor=valor)
+    return HttpResponse({}, content_type="application/json")
 
-def editar(request, id):
-    pessoa = Pessoa.objects.get(id=id)
-    return render(request, "update.html", {"pessoa": pessoa})
 
-def update(request, id):
-    vnome = request.POST.get("nome")
-    pessoa = Pessoa.objects.get(id=id)
-    pessoa.nome = vnome
-    pessoa.save()
-    return redirect(home)
+def editar_anuncio(request, id):
+    body = json.loads(request.body)
+    titulo= body["titulo"]
+    qtd_quartos = body["qtd_quartos"]
+    qtd_banheiro = body["qtd_banheiro"]
+    valor = body["valor"]
+    
+    anuncio = Anuncio.objects.get(id=id)
+    anuncio.titulo = titulo
+    anuncio.qtd_quartos = qtd_quartos
+    anuncio.qtd_banheiro = qtd_banheiro
+    anuncio.valor = valor
+    anuncio.save()
+    
+    return HttpResponse({}, content_type="application/json")
 
-def delete(request, id):
-    pessoa = Pessoa.objects.get(id=id)
-    pessoa.delete()
-    return redirect(home)
+
+def deletar_anuncio(request, id):
+    anuncio = Anuncio.objects.get(id=id)
+    anuncio.delete()
+    return HttpResponse({}, content_type="application/json")
