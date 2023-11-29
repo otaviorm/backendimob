@@ -11,5 +11,10 @@ class Anuncio(models.Model):
     qtd_quartos = models.IntegerField()
     qtd_banheiro = models.IntegerField()
     valor = models.FloatField()
+    vagas = models.IntegerField()
+    descricao = models.CharField(max_length=100)
+    tamanho = models.IntegerField()
+    endereco = models.CharField(max_length=100)
+
 
     
