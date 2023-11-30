@@ -21,7 +21,16 @@ def salvar(request):
     descricao = request.POST.get("descricao")
     tamanho = request.POST.get("tamanho")
     endereco = request.POST.get("endereco")
-    Anuncio.objects.create(titulo=titulo, qtd_quartos=qtd_quartos, qtd_banheiro=qtd_banheiro, valor=valor, vagas=vagas, descricao=descricao, tamanho=tamanho, endereco=endereco)
+    url_imagem = request.POST.get("url_imagem")
+    Anuncio.objects.create(titulo=titulo,
+                            qtd_quartos=qtd_quartos,
+                            qtd_banheiro=qtd_banheiro,
+                            valor=valor, vagas=vagas,
+                            descricao=descricao,
+                            tamanho=tamanho,
+                            endereco=endereco,
+                            url_imagem=url_imagem)
+    
     return HttpResponse({}, content_type="application/json")
 
 
@@ -35,6 +44,7 @@ def editar_anuncio(request, id):
     descricao = body["descricao"]
     tamanho = body["tamanho"]
     endereco = body["endereco"]
+    url_imagem = body["url_imagem"]
     
     anuncio = Anuncio.objects.get(id=id)
     anuncio.titulo = titulo
@@ -45,6 +55,7 @@ def editar_anuncio(request, id):
     anuncio.descricao = descricao
     anuncio.tamanho = tamanho
     anuncio.endereco = endereco
+    anuncio.url_imagem = url_imagem
     anuncio.save()
     
     return HttpResponse({}, content_type="application/json")

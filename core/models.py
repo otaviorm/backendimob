@@ -15,4 +15,5 @@ class Anuncio(models.Model):
     descricao = models.CharField(max_length=100, default=None, blank=True)
     tamanho = models.IntegerField(default=None, blank=True)
     endereco = models.CharField(max_length=100, default=None, blank=True)
+    url_imagem = models.TextField(default=None, blank=True)
 
