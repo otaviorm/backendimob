@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Pessoa, Anuncio
 from django.http import HttpResponse
 from django.core.serializers import serialize
+from django.forms.models import model_to_dict
 import json
 
 
@@ -65,3 +66,14 @@ def deletar_anuncio(request, id):
     anuncio = Anuncio.objects.get(id=id)
     anuncio.delete()
     return HttpResponse({}, content_type="application/json")
+
+
+def buscar_anuncio_por_id(request, id):
+    try:
+        anuncio = Anuncio.objects.get(id=id)
+        anuncio_data = model_to_dict(anuncio)
+        anuncio_json = json.dumps(anuncio_data)
+        return HttpResponse(anuncio_json, content_type="application/json")
+    except Anuncio.DoesNotExist:
+        return HttpResponse(status=404)
+    
